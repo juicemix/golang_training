@@ -47,12 +47,12 @@ func mainMenu() int {
 		fmt.Println("4. Exit")
 		fmt.Printf("Input : ")
 		scanner.Scan()
-		sel, err := strconv.ParseInt(scanner.Text())
+		sel, err := strconv.ParseInt(scanner.Text(), 10, 32)
 		if err != nil {
 			if sel != 1 && sel != 2 && sel != 3 && sel != 4 {
 				fmt.Println("Wrong input!")
 			} else {
-				return sel
+				return int(sel)
 			}
 		} else {
 			fmt.Println("Wrong input!")
@@ -60,7 +60,7 @@ func mainMenu() int {
 	}
 }
 
-func productMenu(products map[string]Product) map[string]Product {
+func productMenu() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Println("Select Menu : ")
@@ -70,18 +70,43 @@ func productMenu(products map[string]Product) map[string]Product {
 		fmt.Println("4. Back")
 		fmt.Printf("Input : ")
 		scanner.Scan()
-		sel, err := strconv.ParseInt(scanner.Text())
+		sel, err := strconv.ParseInt(scanner.Text(), 10, 64)
 		if err != nil {
 			if sel != 1 && sel != 2 && sel != 3 && sel != 4 {
 				fmt.Println("Wrong input!")
 			} else if sel == 1 {
-
+				if len(products) == 0 {
+					fmt.Println("There's no products!")
+				} else {
+					for _, v := range products {
+						fmt.Printf("%d.\t%s\t%d\t%d", v.id, v.name, v.price, v.stock)
+					}
+				}
 			} else if sel == 2 {
-
+				fmt.Printf("Input ID : ")
+				scanner.Scan()
+				id, _ := strconv.Atoi(scanner.Text())
+				fmt.Printf("Input Name : ")
+				scanner.Scan()
+				name := scanner.Text()
+				fmt.Printf("Input Price : ")
+				scanner.Scan()
+				price, _ := strconv.Atoi(scanner.Text())
+				fmt.Printf("Input Stock : ")
+				stock, _ := strconv.Atoi(scanner.Text())
+				products[name] = Product{id, stock, price, name}
 			} else if sel == 3 {
-
+				fmt.Printf("Input Name : ")
+				scanner.Scan()
+				name := scanner.Text()
+				_, ok := products[name]
+				if ok {
+					delete(products, name)
+				} else {
+					fmt.Printf("Product not found!")
+				}
 			} else if sel == 4 {
-
+				return
 			}
 		} else {
 			fmt.Println("Wrong input!")
